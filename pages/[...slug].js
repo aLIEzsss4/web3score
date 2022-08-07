@@ -1,16 +1,12 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 
-import { AudioOutlined } from '@ant-design/icons';
 import { Input, Table, Typography, Tag, Tooltip } from 'antd';
 const { Search } = Input;
 const { Text } = Typography;
 import { Network, Alchemy } from "alchemy-sdk";
 
-// const fixed=num=>num?num.fo
 
 const columns = [
   {
@@ -34,9 +30,7 @@ const columns = [
         <span>
           <span style={{ overflow: 'scroll', width: 250, height: 40, display: 'inline-flex', justifyContent: item.list?.length > 5 ? 'space-between' : 'end' }}>
             {item.list?.map((res, index) => {
-              // if(index<5){
               return (<Tooltip key={res.tokenId} title={res.tokenId}><a rel="noopener noreferrer" href={item.link + '/' + res.tokenId} target="_blank"><img style={{ margin: '0 5px' }} width="40px" src={res.media?.[0]?.thumbnail || res.media?.[0]?.gateway} layout='fill' /></a></Tooltip>)
-              // }
             })
             }
           </span>
@@ -58,16 +52,16 @@ const columns = [
     width: 60,
 
     render: (_, item) => {
-      console.log(item,'item')
-      const showFloor=Object.keys(item.floor).map(floorItem=><p>{floorItem}:{item['floor'][floorItem]['floorPrice']}</p>)
+      console.log(item, 'item')
+      const showFloor = Object.keys(item.floor).map(floorItem => <p>{floorItem}:{item['floor'][floorItem]['floorPrice']}</p>)
 
       return (
         <Tooltip title={showFloor}>
-      
-      <Tag color="#55acee">
-        {(item.floorPrice || 0)?.toFixed(2) + ' E'}
-      </Tag>
-      </Tooltip>
+
+          <Tag color="#55acee">
+            {(item.floorPrice || 0)?.toFixed(2) + ' E'}
+          </Tag>
+        </Tooltip>
       )
 
     }
@@ -83,7 +77,7 @@ const columns = [
 
     render: (_, item) => {
       return <Tag style={{ marginRight: 10 }} color="#3b5999">
-        {item.list?.length * ((item.floor?.openSea?.floorPrice || 0)?.toFixed(2)) + ' E'}
+        {item.list?.length * ((item.floorPrice || 0)?.toFixed(2)) + ' E'}
       </Tag>
     }
   },
@@ -94,20 +88,12 @@ const columns = [
 export default function Addrs(props) {
   const router = useRouter()
 
-
-
   const onSearch = (value) => {
-    // console.log(value);
-    // router.push(`/${value}`)
     router.push({
       pathname: '/[slug]',
       query: { slug: value },
     })
   }
-
-
-
-
 
 
   return (
@@ -134,14 +120,14 @@ export default function Addrs(props) {
             let totalRepayment = 0;
 
             props.list.forEach(({ list, floor }) => {
-              totalRepayment += list.length * (floor.openSea.floorPrice || 0);
+              totalRepayment += list.length * (floor.floorPrice || 0);
             });
 
             return (
               <Table.Summary fixed>
                 <Table.Summary.Row>
                   <Table.Summary.Cell index={0} align="right">
-                   <Tag color={'blue'} > {totalBorrow} </Tag>category
+                    <Tag color={'blue'} > {totalBorrow} </Tag>category
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={1} align="right">
                     <Text> <Tag color={'geekblue'} style={{ marginLeft: 10 }}>
@@ -203,7 +189,7 @@ export async function getServerSideProps(context) {
         nftsList[item.contract.address]['list'].push({
           tokenId: item.tokenId,
           media: item.media,
-          tokenUri:item.tokenUri
+          tokenUri: item.tokenUri
         })
       }
       return item
@@ -222,23 +208,23 @@ export async function getServerSideProps(context) {
         return {
           contract: addrs,
           floor: res,
-          floorPrice:res?.['openSea']?.['floorPrice'] ||res?.['looksRare']?.['floorPrice'] ||0
+          floorPrice: res?.['openSea']?.['floorPrice'] || res?.['looksRare']?.['floorPrice'] || 0
         }
       });
   }
 
-  const getContractMetadataFn=async (addrs)=>{
+  const getContractMetadataFn = async (addrs) => {
     return await alchemy.nft
       .getContractMetadata(addrs)
-      .then(res=>({
-          // contract: addrs,
+      .then(res => ({
+        // contract: addrs,
         name: res.name
       }));
   }
 
-  const getContractAndFloor=async(addrs)=>{
-    let res1=await getContractMetadataFn(addrs)
-    let res2=await getFloorPriceFn(addrs)
+  const getContractAndFloor = async (addrs) => {
+    let res1 = await getContractMetadataFn(addrs)
+    let res2 = await getFloorPriceFn(addrs)
     return {
       ...res1,
       ...res2
@@ -248,14 +234,12 @@ export async function getServerSideProps(context) {
 
   let list = []
 
-  list = await Promise.all(Object.keys(nftsList)?.map((item) =>{
+  list = await Promise.all(Object.keys(nftsList)?.map((item) => {
 
-    return  getContractAndFloor(item)
+    return getContractAndFloor(item)
 
-   
-  })).then(res => {
-    return res
-  })
+
+  }))
 
   // console.log(list,'list')
 
@@ -270,12 +254,12 @@ export async function getServerSideProps(context) {
   list = await list.map(item => {
     return {
       ...item,
-      name: item.name||getName(item?.['floor']?.['openSea']?.['collectionUrl']),
+      name: item.name || getName(item?.['floor']?.['openSea']?.['collectionUrl']),
       list: nftsList[item.contract]['list'] || null,
       link: `https://opensea.io/assets/ethereum/${item.contract}`
     }
-  }).sort((a,b)=>{
-    return b.floorPrice-a.floorPrice
+  }).sort((a, b) => {
+    return b.floorPrice - a.floorPrice
   })
 
 
