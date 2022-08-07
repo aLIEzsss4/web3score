@@ -53,7 +53,7 @@ const columns = [
 
     render: (_, item) => {
       console.log(item, 'item')
-      const showFloor = Object.keys(item.floor).map(floorItem => <p>{floorItem}:{item['floor'][floorItem]['floorPrice']}</p>)
+      const showFloor = Object.keys(item.floor).map((floorItem,index) => <p key={index}>{floorItem}:{item['floor'][floorItem]['floorPrice']}</p>)
 
       return (
         <Tooltip title={showFloor}>
