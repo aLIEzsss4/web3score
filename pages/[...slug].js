@@ -52,7 +52,6 @@ const columns = [
     width: 60,
 
     render: (_, item) => {
-      console.log(item, 'item')
       const showFloor = Object.keys(item.floor).map((floorItem,index) => <p key={index}>{floorItem}:{item['floor'][floorItem]['floorPrice']}</p>)
 
       return (
@@ -116,18 +115,18 @@ export default function Addrs(props) {
 
         <Table key="nfts" size="small" columns={columns} style={{ width: 600 }} scroll={{ x: 400, y: 400 }} dataSource={props.list}
           summary={() => {
-            let totalBorrow = props.list.length;
-            let totalRepayment = 0;
+            let totalAmount  = props.list.length;
+            let totalPrice = 0;
 
-            props.list.forEach(({ list, floor }) => {
-              totalRepayment += list.length * (floor.floorPrice || 0);
+            props.list.forEach(({ list, floorPrice }) => {
+              totalPrice += list.length * floorPrice ;
             });
 
             return (
               <Table.Summary fixed>
                 <Table.Summary.Row>
                   <Table.Summary.Cell index={0} align="right">
-                    <Tag color={'blue'} > {totalBorrow} </Tag>category
+                    <Tag color={'blue'} > {totalAmount } </Tag>category
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={1} align="right">
                     <Text> <Tag color={'geekblue'} style={{ marginLeft: 10 }}>
@@ -138,7 +137,7 @@ export default function Addrs(props) {
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={3} align="right">
                     <Tag style={{ marginRight: 10 }} color="#3b5999">
-                      {totalRepayment ? (totalRepayment).toFixed(2) + ' E' : ''}
+                      {totalPrice ? (totalPrice).toFixed(2) + ' E' : ''}
                     </Tag>
                   </Table.Summary.Cell>
                 </Table.Summary.Row>
