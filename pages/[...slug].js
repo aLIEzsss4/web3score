@@ -20,7 +20,8 @@ const columns = [
     align:'right',
     width:100,
 
-    render: (text,item) => <a href={item.link} target="_blank">{text}</a>,
+         
+    render: (text, item) => <a href={item.link} target="_blank" rel="noopener noreferrer">{text}</a>,
   },
   {
     title: 'Own',
@@ -34,7 +35,7 @@ const columns = [
           <span style={{overflow:'scroll',width:250,height:40,display:'inline-flex',justifyContent:item.list?.length>5?'space-between':'end'}}>
        {item.list?.map((res,index)=>{
         // if(index<5){
-          return (<Tooltip  key={res.tokenId} title={res.tokenId}><a href={item.link+'/'+res.tokenId} target="_blank"><img style={{margin:'0 5px'}}   width="40px" src={res.media?.[0]?.thumbnail||res.media?.[0]?.gateway} layout='fill' /></a></Tooltip>)
+         return (<Tooltip key={res.tokenId} title={res.tokenId}><a rel="noopener noreferrer" href={item.link+'/'+res.tokenId} target="_blank"><img style={{margin:'0 5px'}}   width="40px" src={res.media?.[0]?.thumbnail||res.media?.[0]?.gateway} layout='fill' /></a></Tooltip>)
         // }
       })
        } 
