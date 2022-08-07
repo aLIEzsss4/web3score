@@ -114,8 +114,6 @@ export default function Addrs(props) {
            {router.query?.slug?.[0]}
         </h1>
 
-
-
         <div className={styles.grid}>
           <p>Query any address in Ethereum to understand the Web3 Score </p>
           <Search placeholder="Ethereum address or ENS name" allowClear onSearch={onSearch} enterButton />
@@ -127,7 +125,6 @@ export default function Addrs(props) {
         let totalRepayment = 0;
 
         props.list.forEach(({ list, floor }) => {
-          // totalBorrow = list.length;
           totalRepayment += list.length*(floor.openSea.floorPrice||0);
         });
 
@@ -136,17 +133,13 @@ export default function Addrs(props) {
             <Table.Summary.Row>
               <Table.Summary.Cell index={0} align="right">
                 {totalBorrow} category
-             
-                
                 </Table.Summary.Cell>
-              {/* <Table.Summary.Cell index={1}></Table.Summary.Cell> */}
               <Table.Summary.Cell index={1}  align="right">
                 <Text  > <Tag color={'geekblue'} style={{marginLeft:10}}>
               {props.total} 
             </Tag></Text>
               </Table.Summary.Cell>
               <Table.Summary.Cell index={2}>
-                {/* <Text>{props.total} total</Text> */}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={3}  align="right">
                 <Tag style={{marginRight:10}} color="#3b5999">
@@ -155,12 +148,7 @@ export default function Addrs(props) {
                 </Tag>
               </Table.Summary.Cell>
             </Table.Summary.Row>
-            {/* <Table.Summary.Row>
-              <Table.Summary.Cell index={0}>Balance</Table.Summary.Cell>
-              <Table.Summary.Cell index={1} colSpan={2}>
-                <Text type="danger">{totalBorrow - totalRepayment}</Text>
-              </Table.Summary.Cell>
-            </Table.Summary.Row> */}
+           
              </Table.Summary>
         );
       }}
